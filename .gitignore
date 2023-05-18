@@ -111,3 +111,4 @@ Backup*/
 UpgradeLog*.XML
 /.vs
 /IcsManagerLibrary/publish.cmd
+/IcsManagerLibrary/nuget.exe

@@ -1,6 +1,7 @@
-﻿using IcsManagerLibrary;
-using NETCONLib;
+﻿using System;
 using System.Net.NetworkInformation;
+using IcsManagerLibrary;
+using NETCONLib;
 
 namespace IcsManagerGUI
 {
@@ -8,14 +9,20 @@ namespace IcsManagerGUI
     {
         public NetworkInterface Nic;
 
-        public INetConnection Connection => IcsManager.GetConnectionById(Nic.Id);
+        public INetConnection Connection
+        {
+            get
+            {
+                return IcsManager.GetConnectionById(Nic.Id);
+            }
+        }
 
         public ConnectionItem(NetworkInterface nic)
         {
             Nic = nic;
         }
 
-        public override string ToString()
+        override public String ToString()
         {
             return Nic.Name;
         }

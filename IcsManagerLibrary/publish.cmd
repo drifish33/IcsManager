@@ -1,0 +1,2 @@
+nuget pack Package.nuspec -OutputDirectory packages
+nuget push packages\IcsManagerLibrary.1.0.12.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey oy2j62vzymrb2jusrtiaiwtwgyrirlke3kphnnch67js7y

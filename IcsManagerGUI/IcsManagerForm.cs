@@ -1,8 +1,9 @@
-﻿using IcsManagerLibrary;
-using NETCONLib;
-using System;
+﻿using System;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Windows.Forms;
+using NETCONLib;
+using IcsManagerLibrary;
 
 namespace IcsManagerGUI
 {
@@ -27,25 +28,25 @@ namespace IcsManagerGUI
             }
             catch (UnauthorizedAccessException)
             {
-                _ = MessageBox.Show("Please restart this program with administrative priviliges.");
+                MessageBox.Show("Please restart this program with administrative priviliges.");
                 Close();
             }
             catch (NotImplementedException)
             {
-                _ = MessageBox.Show("This program is not supported on your operating system.");
+                MessageBox.Show("This program is not supported on your operating system.");
                 Close();
             }
         }
 
         private void AddNic(NetworkInterface nic)
         {
-            ConnectionItem connItem = new ConnectionItem(nic);
-            _ = cbSharedConnection.Items.Add(connItem);
-            _ = cbHomeConnection.Items.Add(connItem);
-            INetConnection netShareConnection = connItem.Connection;
+            var connItem = new ConnectionItem(nic);
+            cbSharedConnection.Items.Add(connItem);
+            cbHomeConnection.Items.Add(connItem);
+            var netShareConnection = connItem.Connection;
             if (netShareConnection != null)
             {
-                INetSharingConfiguration sc = IcsManager.GetConfiguration(netShareConnection);
+                var sc = IcsManager.GetConfiguration(netShareConnection);
                 if (sc.SharingEnabled)
                 {
                     switch (sc.SharingConnectionType)
@@ -65,7 +66,7 @@ namespace IcsManagerGUI
         {
             cbSharedConnection.Items.Clear();
             cbHomeConnection.Items.Clear();
-            foreach (NetworkInterface nic in IcsManager.GetAllIPv4Interfaces())
+            foreach (var nic in IcsManager.GetAllIPv4Interfaces())
             {
                 AddNic(nic);
             }
@@ -73,14 +74,16 @@ namespace IcsManagerGUI
 
         private void ButtonApply_Click(object sender, EventArgs e)
         {
-            if ((!(cbSharedConnection.SelectedItem is ConnectionItem sharedConnectionItem)) || (!(cbHomeConnection.SelectedItem is ConnectionItem homeConnectionItem)))
+            var sharedConnectionItem = cbSharedConnection.SelectedItem as ConnectionItem;
+            var homeConnectionItem = cbHomeConnection.SelectedItem as ConnectionItem;
+            if ((sharedConnectionItem == null) || (homeConnectionItem == null))
             {
-                _ = MessageBox.Show(@"Please select both connections.");
+                MessageBox.Show(@"Please select both connections.");
                 return;
             }
             if (sharedConnectionItem.Connection == homeConnectionItem.Connection)
             {
-                _ = MessageBox.Show(@"Please select different connections.");
+                MessageBox.Show(@"Please select different connections.");
                 return;
             }
             IcsManager.ShareConnection(sharedConnectionItem.Connection, homeConnectionItem.Connection);
@@ -89,7 +92,7 @@ namespace IcsManagerGUI
 
         private void cbHomeConnection_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void buttonStopSharing_Click(object sender, EventArgs e)
